@@ -9,12 +9,21 @@
   "teambit.dependencies/dependency-resolver": {
     "packageManager": "teambit.dependencies/pnpm",
     "policy": {
-      "dependencies": {},
+      "dependencies": {
+        "@testing-library/react": "11.2.6"
+      },
       "peerDependencies": {
+        "@fluentui/react": "latest",
+        "@uifabric/icons": "latest",
         "react": "16.13.1",
         "react-dom": "16.13.1"
       }
-    }
+    },
+    "packageManagerArgs": [],
+    "devFilePatterns": [
+      "**/*.spec.ts"
+    ],
+    "strictPeerDependencies": true
   },
   "teambit.workspace/variants": {
     "*": {

@@ -1,13 +1,13 @@
 import React from 'react';
+import { CommandBar, ICommandBarItemProps } from '@fluentui/react';
 
-export interface TitlebarProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ITitlebarProps extends React.HTMLAttributes<HTMLDivElement> {
+  items: ICommandBarItemProps[];
+  farItems?: ICommandBarItemProps[];
+}
 
-};
-
-export const Titlebar = ( {children, ...rest}: TitlebarProps ) => {
-  return (
-    <div {...rest}>
-      {children}
-    </div>
-  )
-};
+export const Titlebar: React.FunctionComponent<ITitlebarProps> = ({
+  items,
+  farItems,
+  ...rest
+}) => <CommandBar items={items} farItems={farItems} {...rest} />;

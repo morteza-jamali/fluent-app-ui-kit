@@ -3,9 +3,12 @@ import {
   CommandBar,
   IButtonStyles,
   ICommandBarItemProps,
+  IContextualMenuItem,
   ICommandBarStyles,
   IIconStyles,
+  IContextualMenuProps,
 } from "@fluentui/react";
+import { camelCase } from "camel-case";
 
 const titleBarDefaultStyle: ICommandBarStyles = {
   root: {
@@ -19,6 +22,61 @@ const titleBarDefaultStyle: ICommandBarStyles = {
     },
   },
 };
+
+export interface ITitleBarItem extends Partial<IContextualMenuItem> {
+  text: string;
+}
+
+export interface ITitleBarItemProps extends Partial<ICommandBarItemProps> {
+  text: string;
+  subMenuItems?: ITitleBarItem[];
+}
+
+export interface ITitleBarProps extends React.HTMLAttributes<HTMLDivElement> {
+  items: ITitleBarItemProps[];
+}
+
+const fixSubMenuItemProps = (items: ITitleBarItem[]): IContextualMenuItem[] => {
+  if (!items) {
+    return items as IContextualMenuItem[];
+  }
+
+  return items.map((item) => {
+    item.key = `${camelCase(item.text)}Key`;
+    item.iconProps = { iconName: "CheckMark" };
+
+    return item as IContextualMenuItem;
+  }) as IContextualMenuItem[];
+};
+
+const fixSubMenuProps = (item: ITitleBarItemProps): IContextualMenuProps => {
+  let subMenuItems: IContextualMenuItem[] = fixSubMenuItemProps(
+    item.subMenuItems
+  );
+
+  if (subMenuItems) {
+    if (!item.subMenuProps) {
+      item.subMenuProps = { items: [] };
+    }
+
+    item.subMenuProps.items = subMenuItems;
+    item.subMenuProps.className = `${
+      item.subMenuProps.className ?? ""
+    } subMenuContainer`.trim();
+  }
+
+  return item.subMenuProps;
+};
+
+const fixItemProps = (items: ITitleBarItemProps[]): ICommandBarItemProps[] =>
+  items.map((item) => {
+    item.key = item.key ?? `${item.text}Key`;
+    item.cacheKey = item.cacheKey ?? `${item.text}CacheKey`;
+    item.subMenuProps = fixSubMenuProps(item);
+    item.buttonStyles = item.buttonStyles ?? getButtonStyle();
+
+    return item as ICommandBarItemProps;
+  });
 
 const getButtonStyle = (): IButtonStyles => {
   let style: IButtonStyles = {
@@ -85,24 +143,14 @@ const farItems: ICommandBarItemProps[] = [
   },
 ];
 
-export interface ITitlebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  items: ICommandBarItemProps[];
-}
-
-export const Titlebar: React.FunctionComponent<ITitlebarProps> = ({
+export const Titlebar: React.FunctionComponent<ITitleBarProps> = ({
   items,
   ...rest
-}) => {
-  items = items.map((item) =>
-    Object.assign(item, { buttonStyles: getButtonStyle() })
-  );
-
-  return (
-    <CommandBar
-      items={items}
-      farItems={farItems}
-      {...rest}
-      styles={titleBarDefaultStyle}
-    />
-  );
-};
+}) => (
+  <CommandBar
+    items={fixItemProps(items)}
+    farItems={farItems}
+    {...rest}
+    styles={titleBarDefaultStyle}
+  />
+);

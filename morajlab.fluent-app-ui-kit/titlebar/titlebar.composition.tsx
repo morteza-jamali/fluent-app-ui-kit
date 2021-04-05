@@ -1,42 +1,30 @@
 import React from "react";
-import type { ICommandBarItemProps } from "@fluentui/react";
 import { Titlebar } from "./titlebar";
+import type { ITitleBarItemProps } from "./titlebar";
 
-const _items: ICommandBarItemProps[] = [
+const items: ITitleBarItemProps[] = [
   {
-    key: "newItem",
     text: "New",
-    cacheKey: "myCacheKey", // changing this key will invalidate this item's cache
-    subMenuProps: {
-      items: [
-        {
-          key: "emailMessage",
-          text: "Email message",
-          iconProps: { iconName: "Mail" },
-          ["data-automation-id"]: "newEmailButton", // optional
-        },
-        {
-          key: "calendarEvent",
-          text: "Calendar event",
-          iconProps: { iconName: "Calendar" },
-        },
-      ],
-    },
+    subMenuItems: [
+      {
+        text: "First item",
+      },
+      {
+        text: "Second Item",
+      },
+      {
+        text: "Third Item",
+      },
+    ],
   },
   {
-    key: "upload",
-    text: "Upload",
+    text: "File",
   },
   {
-    key: "share",
-    text: "Share",
-  },
-  {
-    key: "download",
-    text: "Download",
+    text: "Help",
   },
 ];
 
 export const BasicTitlebar = () => {
-  return <Titlebar items={_items} />;
+  return <Titlebar items={items} />;
 };

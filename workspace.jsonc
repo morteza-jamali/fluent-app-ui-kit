@@ -16,13 +16,12 @@
         "@fluentui/react": "latest",
         "@uifabric/icons": "latest",
         "react": "16.13.1",
-        "react-dom": "16.13.1"
+        "react-dom": "16.13.1",
+        "camel-case": "^4.1.2"
       }
     },
     "packageManagerArgs": [],
-    "devFilePatterns": [
-      "**/*.spec.ts"
-    ],
+    "devFilePatterns": ["**/*.spec.ts"],
     "strictPeerDependencies": true
   },
   "teambit.workspace/variants": {

@@ -15,6 +15,7 @@
       "peerDependencies": {
         "@fluentui/react": "latest",
         "@uifabric/icons": "latest",
+        "@uifabric/react-hooks": "latest",
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "camel-case": "^4.1.2"

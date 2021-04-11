@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { IContextualMenuProps, IContextualMenuItem } from "@fluentui/react";
 import { camelCase } from "camel-case";
 
@@ -8,22 +9,42 @@ export interface ICheckableContextualMenuItem
 
 export interface ICheckableContextualMenuProps
   extends Partial<IContextualMenuProps> {
-  items: ICheckableContextualMenuItem[];
+  itemList: ICheckableContextualMenuItem[];
 }
 
+type onItemClickType = (
+  state: any,
+  setter: React.Dispatch<React.SetStateAction<any>>
+) => IContextualMenuProps["onItemClick"];
+
+const onItemClick: onItemClickType = (state, setter) => (_env, item) => {
+  console.log(state);
+  setter({ apple: true });
+};
+
 export const CheckableContextualMenu = (
-  props: () => ICheckableContextualMenuProps | ICheckableContextualMenuProps
+  props: (() => ICheckableContextualMenuProps) | ICheckableContextualMenuProps
 ): IContextualMenuProps => {
   let _props: ICheckableContextualMenuProps =
     typeof props === "function" ? props() : props;
+  const [listState, setListState] = useState({ apple: false });
 
-  _props.items = _props.items.map((item) => {
-    item.key = item.key ?? `${camelCase(item.text)}Key`;
+  _props.onItemClick = onItemClick(listState, setListState);
+  _props.items =
+    _props.items ??
+    _props.itemList.map((item) => {
+      item.key = item.key ?? `${camelCase(item.text)}Key`;
+      item.iconProps = {
+        iconName: "CheckMark",
+        styles: {
+          root: {
+            opacity: listState.apple ? 1 : 0,
+          },
+        },
+      };
 
-    item.iconProps = { iconName: "CheckMark" };
+      return item as IContextualMenuItem;
+    });
 
-    return item;
-  }) as ICheckableContextualMenuItem[];
-
-  return _props;
+  return _props as IContextualMenuProps;
 };
